@@ -25,15 +25,16 @@ COPY . .
 RUN CGO_ENABLED="0" go build -ldflags="-s -w" -a -o /TechChallengeApp
 RUN swagger generate spec -o /swagger.json \
  && cp /swagger.json ui/assets/swagger/ \
- && cp -R /tmp/swagger/dist ui/assets/swagger
+ && cp -R /tmp/swagger/dist/* ui/assets/swagger
 
 RUN cd ui && rice append --exec /TechChallengeApp
 
-FROM alpine:latest
+FROM scratch
 
 WORKDIR /TechChallengeApp
 
 COPY conf.toml ./conf.toml
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /TechChallengeApp TechChallengeApp
 
 ENTRYPOINT [ "./TechChallengeApp" ]
