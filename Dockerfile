@@ -37,3 +37,4 @@ COPY conf.toml ./conf.toml
 COPY --from=build /TechChallengeApp TechChallengeApp
 
 ENTRYPOINT [ "./TechChallengeApp" ]
+CMD [ "serve" ]
